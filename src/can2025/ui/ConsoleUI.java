@@ -30,7 +30,9 @@ public class ConsoleUI {
         
         while (running) {
             afficherMenuPrincipal();
-            int choix = lireEntier("Votre choix: ");
+            System.out.print("Votre choix: ");
+            int choix = scanner.nextInt();
+            scanner.nextLine(); 
             
             try {
                 traiterChoix(choix);
@@ -39,7 +41,8 @@ public class ConsoleUI {
             }
             
             if (running) {
-                pause();
+                System.out.print("\nAppuyez sur Entree pour continuer...");
+                scanner.nextLine();
             }
         }
         
@@ -101,8 +104,12 @@ public class ConsoleUI {
         System.out.println("  2. Staff General");
         System.out.println("  3. VIP");
         
-        int type = lireEntier("Choisissez le type: ");
-        String nom = lireChaine("Nom de l'utilisateur: ");
+        System.out.print("Choisissez le type: ");
+        int type = scanner.nextInt();
+        scanner.nextLine();
+        
+        System.out.print("Nom de l'utilisateur: ");
+        String nom = scanner.nextLine().trim();
         
         switch (type) {
             case 1:
@@ -126,14 +133,20 @@ public class ConsoleUI {
         System.out.println("|    AJOUTER UNE ZONE SECURISEE   |");
         System.out.println("+---------------------------------+");
         
-        String idZone = lireChaine("ID de la zone (ex: Z01): ");
-        String nomZone = lireChaine("Nom de la zone: ");
+        System.out.print("ID de la zone (ex: Z01): ");
+        String idZone = scanner.nextLine().trim();
+        
+        System.out.print("Nom de la zone: ");
+        String nomZone = scanner.nextLine().trim();
         
         System.out.println("\nNiveaux de securite:");
         System.out.println("  1 - Spectateur");
         System.out.println("  2 - Staff");
         System.out.println("  3 - VIP");
-        int niveau = lireEntier("Niveau requis (1-3): ");
+        
+        System.out.print("Niveau requis (1-3): ");
+        int niveau = scanner.nextInt();
+        scanner.nextLine();
         
         service.creerZone(idZone, nomZone, niveau);
         
@@ -160,36 +173,49 @@ public class ConsoleUI {
             System.out.println("  ID " + u.getId() + ": " + u.getNom() + " (" + u.getCategorie() + ")");
         }
         
-        int userId = lireEntier("\nID de l'utilisateur: ");
+        System.out.print("\nID de l'utilisateur: ");
+        int userId = scanner.nextInt();
+        scanner.nextLine();
         
         System.out.println("\nType de validite:");
         System.out.println("  1. Duree en jours");
         System.out.println("  2. Dates personnalisees");
         
-        int choix = lireEntier("Choix: ");
+        System.out.print("Choix: ");
+        int choix = scanner.nextInt();
+        scanner.nextLine();
         
         if (choix == 1) {
-            int duree = lireEntier("Duree en jours: ");
-            // Note: Vous devez implementer genererBadge(userId, duree) dans SecurityService
+            System.out.print("Duree en jours: ");
+            int duree = scanner.nextInt();
+            scanner.nextLine();
+            service.genererBadge(userId, duree);
             System.out.println("\n[OK] Badge genere avec duree de " + duree + " jours");
         } else {
-            LocalDate dateDebut = lireDate("Date de debut (jj/mm/aaaa): ");
-            LocalDate dateFin = lireDate("Date de fin (jj/mm/aaaa): ");
+            System.out.print("Date de debut (jj/mm/aaaa): ");
+            String debutStr = scanner.nextLine().trim();
+            LocalDate dateDebut = parseDate(debutStr);
+            
+            System.out.print("Date de fin (jj/mm/aaaa): ");
+            String finStr = scanner.nextLine().trim();
+            LocalDate dateFin = parseDate(finStr);
+            
             service.genererBadge(userId, dateDebut, dateFin);
             System.out.println("\n[OK] Badge genere avec succes!");
         }
     }
     
-    /**
-     * Menu pour verifier un acces.
-     */
     private void verifierAcces() {
         System.out.println("\n+---------------------------------+");
         System.out.println("|       VERIFIER UN ACCES         |");
         System.out.println("+---------------------------------+");
         
-        int numBadge = lireEntier("Numero du badge: ");
-        String idZone = lireChaine("ID de la zone: ");
+        System.out.print("Numero du badge: ");
+        int numBadge = scanner.nextInt();
+        scanner.nextLine();
+        
+        System.out.print("ID de la zone: ");
+        String idZone = scanner.nextLine().trim();
         
         AccesLog log = service.tenterAcces(numBadge, idZone);
         
@@ -201,9 +227,6 @@ public class ConsoleUI {
         System.out.println("   Resultat: " + log.getResultat().getLibelle());
     }
     
-    /**
-     * Menu pour bloquer/debloquer un badge.
-     */
     private void gererBadge() throws BadgeInvalideException {
         System.out.println("\n+---------------------------------+");
         System.out.println("|   BLOQUER / DEBLOQUER UN BADGE  |");
@@ -212,11 +235,17 @@ public class ConsoleUI {
         System.out.println("\n  1. Bloquer un badge");
         System.out.println("  2. Debloquer un badge");
         
-        int choix = lireEntier("Choix: ");
-        int numBadge = lireEntier("Numero du badge: ");
+        System.out.print("Choix: ");
+        int choix = scanner.nextInt();
+        scanner.nextLine();
+        
+        System.out.print("Numero du badge: ");
+        int numBadge = scanner.nextInt();
+        scanner.nextLine();
         
         if (choix == 1) {
-            String raison = lireChaine("Raison du blocage: ");
+            System.out.print("Raison du blocage: ");
+            String raison = scanner.nextLine().trim();
             service.bloquerBadge(numBadge, raison);
             System.out.println("\n[OK] Badge No " + numBadge + " bloque avec succes!");
         } else if (choix == 2) {
@@ -262,7 +291,9 @@ public class ConsoleUI {
         System.out.println("\n  1. Tri par niveau d'acces");
         System.out.println("  2. Tri par nom");
         
-        int choix = lireEntier("Choix: ");
+        System.out.print("Choix: ");
+        int choix = scanner.nextInt();
+        scanner.nextLine();
         
         List<UtilisateurCAN> liste;
         
@@ -350,38 +381,13 @@ public class ConsoleUI {
         System.out.println("  - Expires: " + expires);
     }
     
-    // ==================== UTILITAIRES ====================
-    private int lireEntier(String message) {
-        while (true) {
-            System.out.print(message);
-            try {
-                String input = scanner.nextLine().trim();
-                return Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                System.out.println("[ERREUR] Veuillez entrer un nombre valide.");
-            }
+
+    private LocalDate parseDate(String dateStr) {
+        try {
+            return LocalDate.parse(dateStr, DATE_FORMATTER);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Format de date invalide. Utilisez jj/mm/aaaa");
         }
     }
     
-    private String lireChaine(String message) {
-        System.out.print(message);
-        return scanner.nextLine().trim();
-    }
-    
-    private LocalDate lireDate(String message) {
-        while (true) {
-            System.out.print(message);
-            try {
-                String input = scanner.nextLine().trim();
-                return LocalDate.parse(input, DATE_FORMATTER);
-            } catch (DateTimeParseException e) {
-                System.out.println("[ERREUR] Format de date invalide. Utilisez jj/mm/aaaa");
-            }
-        }
-    }
-    
-    private void pause() {
-        System.out.print("\nAppuyez sur Entree pour continuer...");
-        scanner.nextLine();
-    }
 }

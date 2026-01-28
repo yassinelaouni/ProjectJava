@@ -326,16 +326,4 @@ public class SecurityService {
         return new ArrayList<>(logsAcces);
     }
     
-    /**
-     * Réinitialise le service (pour les tests).
-     */
-    public void reinitialiser() {
-        utilisateurs.clear();
-        badges.clear();
-        zones.clear();
-        logsAcces.clear();
-        utilisateursParId.clear();
-        badgesParNumero.clear();
-        zonesParId.clear();
-    }
 }

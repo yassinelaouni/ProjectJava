@@ -328,10 +328,7 @@ public class Main {
     }
     
     private static void afficherRapportFinal() {
-        System.out.println("\n" + "===============================================================");
-        System.out.println("                    RAPPORT FINAL");
-        System.out.println("=========================================================================");
-        
+
         System.out.println(service.genererRapport());
         
     }

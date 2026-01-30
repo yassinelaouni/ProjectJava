@@ -189,7 +189,9 @@ public class ConsoleUI {
             System.out.print("Duree en jours: ");
             int duree = scanner.nextInt();
             scanner.nextLine();
-            service.genererBadge(userId, duree);
+            LocalDate debut = LocalDate.now();
+            LocalDate fin = debut.plusDays(duree);
+            service.genererBadge(userId, debut, fin);
             System.out.println("\n[OK] Badge genere avec duree de " + duree + " jours");
         } else {
             System.out.print("Date de debut (jj/mm/aaaa): ");
